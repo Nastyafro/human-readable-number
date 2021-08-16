@@ -1,7 +1,7 @@
 module.exports = function toReadable (number) {
   var string = number.toString(),
   units, tens, start, end, chunks, chunksLen, chunk, ints, i, word, words;
-  if (parseInt(string)) === 0) {
+  if (parseInt(string) === 0) {
       return 'zero';
 }
   units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
@@ -25,7 +25,7 @@ for (i = 0; i < chunksLen; i++) {
 }
 
 if (chunk) {
-    ints = chunks[i].split('').reverse().map(parseFloat);
+    ints = chunks[i].split("").reverse().map(parseFloat);
     if (ints[1] === 1) {
         ints[0] += 10;
 }
@@ -43,4 +43,5 @@ if ((word = units[ints[2]])) {
 }
 return words.reverse().join(' ');
 
+}
 }
