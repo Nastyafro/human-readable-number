@@ -1,56 +1,163 @@
 module.exports = function toReadable (number) {
-    var string = number.toString(),
-    units, tens, scales, start, end, chunks, chunksLen, chunk, ints, i, word, words;
+  
+        const numberArr = String(number).split("");
+        let readNumberArr = [];
+        
+        if (numberArr.length == 3) {
+          
+          let hundreds = numberArr[0];
+          
+          switch (hundreds) {
+            case '1':
+              hundredsStr = 'one hundred';
+              break;    
+            case '2':
+              hundredsStr = 'two hundred';
+              break;    
+            case '3':
+              hundredsStr = 'three hundred';
+              break;    
+            case '4':
+              hundredsStr = 'four hundred';
+              break;    
+            case '5':
+              hundredsStr = 'five hundred';
+              break;   
+            case '6':
+              hundredsStr = 'six hundred';
+              break;    
+            case '7':
+              hundredsStr = 'seven hundred';
+              break;    
+            case '8':
+              hundredsStr = 'eight hundred';
+              break;    
+            case '9':
+              hundredsStr = 'nine hundred';
+              break;
+          }
+          
+          numberArr.shift()
+          readNumberArr.push(hundredsStr);          
+        }
+        
+          if (numberArr.length == 2) {
+          
+          let dozens = numberArr[0];
+          let dozensNum = numberArr[numberArr.length - 1]
+      
+            if (dozens !== '1')  {
+              switch (dozens) {
+                case '0':
+                  dozensStr = null;
+                  break;
+                case '2':
+                  dozensStr = 'twenty';
+                  break;    
+                case '3':
+                  dozensStr = 'thirty';
+                  break;    
+                case '4':
+                  dozensStr = 'forty';
+                  break;    
+                case '5':
+                  dozensStr = 'fifty';
+                  break;   
+                case '6':
+                  dozensStr = 'sixty';
+                  break;    
+                case '7':
+                  dozensStr = 'seventy';
+                  break;    
+                case '8':
+                  dozensStr = 'eighty';
+                  break;    
+                case '9':
+                  dozensStr = 'ninety';
+                  break;
+              }
+              } else { 
+                switch (dozensNum) {
+                  case '0':
+                    dozensStr = 'ten';
+                    break;
+                  case '1':
+                    dozensStr = 'eleven';
+                    break;
+                  case '2':
+                    dozensStr = 'twelve';
+                    break;
+                  case '3':
+                    dozensStr = 'thirteen';
+                    break;
+                  case '4':
+                    dozensStr = 'fourteen';
+                    break;
+                  case '5':
+                    dozensStr = 'fifteen';
+                    break;
+                  case '6':
+                    dozensStr = 'sixteen';
+                    break;
+                  case '7':
+                    dozensStr = 'seventeen';
+                    break;
+                  case '8':
+                    dozensStr = 'eighteen';
+                    break;
+                  case '9':
+                    dozensStr = 'nineteen';
+                    break;
+                }
+              }
 
-    if (parseInt(string) === 0) {
-    return 'zero';
+            readNumberArr.push(dozensStr);
+            readNumberArr = readNumberArr.filter(x => x !== null)
+      
+        }
+          
+        if (numberArr.length > 1 && numberArr[numberArr.length - 2] == '1') {
+            return readNumberArr.join(" ");
+        } else if (numberArr.length > 1 && numberArr[numberArr.length - 1] == '0'){
+            return readNumberArr.join(" ");
+        } else {
+          let units = numberArr[numberArr.length - 1];
+          switch (units) {
+            case '0':
+              unitsStr = 'zero';
+              break; 
+            case '1':
+              unitsStr = 'one';
+              break;    
+            case '2':
+              unitsStr = 'two';
+              break;    
+            case '3':
+              unitsStr = 'three';
+              break;    
+            case '4':
+              unitsStr = 'four';
+              break;    
+            case '5':
+              unitsStr = 'five';
+              break;   
+            case '6':
+              unitsStr = 'six';
+              break;    
+            case '7':
+              unitsStr = 'seven';
+              break;    
+            case '8':
+              unitsStr = 'eight';
+              break;    
+            case '9':
+              unitsStr = 'nine';
+              break;
+          }
+          readNumberArr.push(unitsStr);
+          return readNumberArr.join(" ")
+        }
+
     }
-    /* Array of units as words */
-    units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
-    /* Array of tens as words */
-    tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
-    /* Array of scales as words */
-    scales = ['', 'thousand', 'million', 'billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion', 'septillion', 'octillion', 'nonillion', 'decillion', 'undecillion', 'duodecillion', 'tredecillion', 'quatttuor-decillion', 'quindecillion', 'sexdecillion', 'septen-decillion', 'octodecillion', 'novemdecillion', 'vigintillion', 'centillion'];
-    /* Split user arguemnt into 3 digit chunks from right to left */
-    start = string.length;
-    chunks = [];
-    while (start > 0) {
-    end = start;
-    chunks.push(string.slice((start = Math.max(0, start - 3)), end));
-    }
-    /* Check if function has enough scale words to be able to stringify the user argument */
-    chunksLen = chunks.length;
-    if (chunksLen > scales.length) {
-    return '';
-    }
-    /* Stringify each integer in each chunk */
-    words = [];
-    for (i = 0; i < chunksLen; i++) {
-    chunk = parseInt(chunks[i]);
-    if (chunk) {
-    /* Split chunk into array of individual integers */
-    ints = chunks[i].split('').reverse().map(parseFloat);
-    /* If tens integer is 1, i.e. 10, then add 10 to units integer */
-    if (ints[1] === 1) {
-    ints[0] += 10;
-    }
-    /* Add scale word if chunk is not zero and array item exists */
-    if ((word = scales[i])) {
-    words.push(word);
-    }
-    /* Add unit word if array item exists */
-    if ((word = units[ints[0]])) {
-    words.push(word);
-    }
-    /* Add tens word if array item exists */
-    if ((word = tens[ints[1]])) {
-    words.push(word);
-    }
-    /* Add hundreds word if array item exists */
-    if ((word = units[ints[2]])) {
-    words.push(word + ' hundred');
-    }
-    }
-    }
-    return words.reverse().join(' ');
-}
+
+
